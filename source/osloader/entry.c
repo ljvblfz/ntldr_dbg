@@ -352,11 +352,11 @@ BlDetectHardware (
             ULONG OptionsLength = Options ? strlen( Options ) : 0;
             ExternalServicesTable->DetectHardware( Heap, HeapSize, &TempFwTree, &Dummy, Options, OptionsLength );
 
-            FwConfigurationTree = static_cast<PCONFIGURATION_COMPONENT_DATA>( TempFwTree );
+            FwConfigurationTree = (PCONFIGURATION_COMPONENT_DATA)(TempFwTree);
 
             extern ARC_STATUS BlpMarkExtendedVideoRegionOffLimits();
 
-            Ret = BlpMarkExtendedVideoRegionOffLimits() == ESUCCESS;
+            Ret = (BlpMarkExtendedVideoRegionOffLimits() == ESUCCESS);
         }
     }
 
@@ -449,13 +449,15 @@ BlStartup (
             //
 
             ULONG RestoreDriveId;
-            if ( BlDetectHardware( DriveId, "/fastdetect" ) && AEInitializeIo( DriveId ) == ESUCCESS && ArcOpen( LinkedRestorePath, ArcOpenReadWrite, &RestoreDriveId ) == ESUCCESS ) {
+            if (BlDetectHardware(DriveId, "/fastdetect") &&
+                AEInitializeIo(DriveId) == ESUCCESS &&
+                ArcOpen(LinkedRestorePath, ArcOpenReadWrite, &RestoreDriveId) == ESUCCESS ) {
                 //
                 // restore it
                 //
 
-                BlHiberRestore( RestoreDriveId, 0 );
-                ArcCacheClose( RestoreDriveId );
+                BlHiberRestore(RestoreDriveId, 0);
+                ArcCacheClose(RestoreDriveId);
             }
         }
 #endif
